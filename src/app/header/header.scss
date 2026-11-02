@@ -1,0 +1,47 @@
+.header{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 30px;
+    height: 80px;
+    background-color: rgb(245, 245, 245);
+    box-sizing: border-box;
+    overflow: none;
+}
+
+h3 {
+    margin: 0;
+}
+
+.search {
+    display: flex;
+    flex: 1;
+    align-items: baseline;
+    justify-content: baseline;
+    margin-inline: 100px;
+}
+
+.avatar{
+    height: 40px;
+    width: 40px;
+    background-color: rgb(78, 77, 77);
+    border-radius: 20px;
+    margin: 20px;
+}
+
+button {
+    background-color: rgb(100, 13, 214);
+    border: none;
+    height: 40px;
+    width: 100px;
+    border-radius: 10px;
+    color: white;
+}
+
+.search input {
+    background-color: rgb(231, 231, 231);
+    border: none;
+    height: 40px;
+    width: 20%;
+    border-radius: 10px;
+}
