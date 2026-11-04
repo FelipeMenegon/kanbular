@@ -1,33 +1,64 @@
-.header{
-    padding-inline: 3vh;
+.header {
+  padding-inline: 3vh;
 }
 
-.cards{
-    display: flex;
-    padding-inline: 0.3vh;
+.cards {
+  display: flex;
+  padding-inline: 0.3vh;
 }
 
 .card {
-    margin-inline: 16px;
-    margin-top: 0;
-    width: 36vh;
-    height: 70vh;
-    background-color: rgb(223, 223, 223);
-    border-radius: 10px;
-    box-sizing: border-box;
-    overflow: hidden;
-    padding: 20px;
-    display: flex;
-    justify-content: space-between;
+  margin-inline: 16px;
+  margin-top: 0;
+  width: 36vh;
+  height: 70vh;
+  background-color: rgb(223, 223, 223);
+  border-radius: 10px;
+  box-sizing: border-box;
+  overflow: hidden;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  cursor: grab;
 }
 
-.card span{
-    cursor: pointer;
-    font-weight: 600;
+.card:active {
+  cursor: grabbing;
 }
 
-a{
-    font-size: 18px;
-    font-weight: 600;
+.card span {
+  cursor: pointer;
+  font-weight: 600;
 }
 
+a {
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 36px;
+  height: 36px;
+  border: none;
+  border-radius: 18px;
+  margin-top: -4px;
+  padding: 0;
+
+  background: transparent;
+  cursor: pointer;
+
+  transition: background-color 0.2s, box-shadow 0.2s;
+}
+
+.icon-button:hover {
+  background-color: #c7c7c794;
+}
+
+.icon-button span {
+  font-size: 24px;
+}

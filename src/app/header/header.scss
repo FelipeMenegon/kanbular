@@ -56,7 +56,7 @@ h3 {
   margin: 20px;
 
   background-color: rgb(78, 77, 77);
-  border-radius: 50%;
+  border-radius: 50px;
 }
 
 button {
@@ -73,7 +73,7 @@ button {
 
   border: none;
   border-radius: 10px;
-
+  transition: all 0.2s ease-in-out;
   cursor: pointer;
 }
 

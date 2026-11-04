@@ -20,6 +20,7 @@ ul {
   gap: 12px;
   border-left: 4px solid transparent;
   box-sizing: border-box;
+  transition: all 0.2s ease-in-out;
 }
 
 span {
@@ -33,4 +34,5 @@ ul:hover {
   border-end-end-radius: 10px;
   border-start-end-radius: 10px;
   border-left: 4px solid rgb(111, 16, 235);
+
 }
