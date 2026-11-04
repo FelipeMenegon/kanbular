@@ -1,7 +1,7 @@
 import { Component, signal } from '@angular/core';
-import { Header } from './header/header';
-import { MenuBar } from './menu-bar/menu-bar';
-import { Kanban } from './kanban/kanban';
+import { Header } from './components/header/header';
+import { MenuBar } from './components/menu-bar/menu-bar';
+import { Kanban } from './components/kanban/kanban';
 
 @Component({
   imports: [Header, MenuBar, Kanban],
