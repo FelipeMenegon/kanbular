@@ -1,8 +1,9 @@
 .menu-bar {
   margin: 0;
-  height: 100%;
+  height: 100vh;
   width: 300px;
-  background-color: #fcfcfc;
+  background-color: white;
+  border-right: 1px solid #e0dede;
 }
 
 .menu-itens {
@@ -14,4 +15,7 @@ ul {
   font-size: 22px;
   padding-inline: 30px;
   padding-top: 20px;
+  display: flex;
+  align-items: center;
+  gap: 12px
 }
