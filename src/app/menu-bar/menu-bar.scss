@@ -14,8 +14,13 @@ ul {
   margin: 0;
   font-size: 22px;
   padding-inline: 30px;
-  padding-top: 20px;
+  padding-block: 10px;
   display: flex;
   align-items: center;
   gap: 12px
+}
+
+ul:hover {
+  cursor: pointer;
+  background-color: rgb(223, 223, 223);
 }

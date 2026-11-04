@@ -1,15 +1,16 @@
 .header{
-    padding-inline: 20px;
+    padding-inline: 3vh;
 }
 
 .cards{
     display: flex;
+    padding-inline: 0.3vh;
 }
 
 .card {
     margin-inline: 20px;
     margin-top: 0;
-    width: 400px;
+    width: 36vh;
     height: 70vh;
     background-color: rgb(223, 223, 223);
     border-radius: 10px;
