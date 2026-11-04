@@ -11,6 +11,13 @@
   border-bottom: 1px solid #e0dede;
 }
 
+.logo img {
+  width: 200px;
+  height: 200px;
+  object-fit: contain;
+  margin-left: -20px;
+}
+
 h3 {
   margin: 0;
 }
@@ -22,7 +29,7 @@ h3 {
   flex: 1;
   align-items: center;
 
-  margin-inline: 200px;
+  margin-inline: 110px;
 }
 
 .search input {
