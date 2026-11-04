@@ -1,5 +1,6 @@
 .header {
-  padding-inline: 3vh;
+  margin: 20px;
+  padding-inline: 2px;
 }
 
 .cards {
@@ -52,7 +53,9 @@ a {
   background: transparent;
   cursor: pointer;
 
-  transition: background-color 0.2s, box-shadow 0.2s;
+  transition:
+    background-color 0.2s,
+    box-shadow 0.2s;
 }
 
 .icon-button:hover {
