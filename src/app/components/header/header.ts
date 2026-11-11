@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   imports: [],
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './header.scss',
   templateUrl: './header.html',
 })
-export class Header {}
+export class Header {
+  constructor(private taskService: TaskService) {}
+}

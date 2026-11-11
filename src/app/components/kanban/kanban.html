@@ -7,13 +7,21 @@
     <a>Backlog</a>
     <button class="icon-button">
       <span class="material-symbols-outlined"> more_vert </span>
-    </button>  </div>
+    </button>
+    @for (task of taskService.tasks(); track task.id) {
+    <app-task [task]="task"></app-task>
+    }
+  </div>
 
   <div class="card">
     <a>A Fazer</a>
     <button class="icon-button">
       <span class="material-symbols-outlined"> more_vert </span>
     </button>
+
+    @for (task of taskService.tasks(); track task.id) {
+    <app-task [task]="task"></app-task>
+    }
   </div>
 
   <div class="card">
@@ -21,6 +29,9 @@
     <button class="icon-button">
       <span class="material-symbols-outlined"> more_vert </span>
     </button>
+    @for (task of taskService.tasks() ; track task.id) {
+    <app-task [task]="task"></app-task>
+    }
   </div>
 
   <div class="card">
@@ -28,5 +39,8 @@
     <button class="icon-button">
       <span class="material-symbols-outlined"> more_vert </span>
     </button>
+    @for (task of taskService.tasks() ; track task.id) {
+    <app-task [task]="task"></app-task>
+    }
   </div>
 </div>
