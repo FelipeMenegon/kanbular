@@ -1,0 +1,23 @@
+<div class="modal-background">
+    <div class="modal">
+        <h2>Nova tarefa</h2>
+
+        <input type="text" placeholder="Título" [(ngModel)]="title">
+
+        <textarea placeholder="Descrição" [(ngModel)]="description"></textarea>
+
+        <select [(ngModel)]="priority">
+            <option value="high">Alta</option>
+            <option value="medium">Média</option>
+            <option value="low">Baixa</option>
+        </select>
+
+        <button (click)="taskService.createTask(title, description, priority)" class="purple-button">
+            Criar
+        </button>
+
+        <button (click)="taskService.fecharModal()" class="purple-button-close">
+            Fechar
+        </button>
+    </div>
+</div>

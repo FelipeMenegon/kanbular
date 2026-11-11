@@ -5,22 +5,22 @@ import { Task } from '../models/task';
 export class TaskService {
   tasks = signal<Task[]>([]);
 
-  modalAberto = signal(false);
+  openedModal = signal(false);
 
   abrirModal() {
-    this.modalAberto.set(true);
+    this.openedModal.set(true);
   }
 
   fecharModal() {
-    this.modalAberto.set(false);
+    this.openedModal.set(false);
   }
 
-  createTask() {
+  createTask(title: string, description: string, priority: 'low' | 'medium' | 'high') {
     const newTask: Task = {
       id: this.tasks().length + 1,
-      title: 'New Task',
-      description: 'This is a new task',
-      priority: 'medium',
+      title: title,
+      description: description,
+      priority: priority,
       status: 'backlog',
       createdAt: new Date(),
     };

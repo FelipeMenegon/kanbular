@@ -1,14 +1,21 @@
-.task {
+.taskcontainer {
   color: black;
   border-radius: 10px;
   background-color: rgb(181, 179, 179);
   height: 100px;
-  width: 96%;
+  width: 100fr;
   padding: 10px;
   box-sizing: border-box;
   cursor: grab;
 }
 
-.task:active {
+.taskcontainer:active {
   cursor: grabbing;
+}
+
+.task {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  gap: 10px;
 }

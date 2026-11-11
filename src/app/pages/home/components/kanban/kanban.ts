@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
-import { Task } from '../../models/task';
+import { Task } from '../../../../shared/models/task';
 import { TaskComponent } from '../task/task';
-import { TaskService } from '../../services/task.service';
+import { TaskService } from '../../../../shared/services/task.service';
 import { Modaltask } from '../modaltask/modaltask';
 
 @Component({
