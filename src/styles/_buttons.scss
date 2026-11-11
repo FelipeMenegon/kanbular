@@ -1,0 +1,21 @@
+.purple-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+
+  width: 132px;
+  height: 42px;
+
+  color: white;
+  background-color: rgb(100, 13, 214);
+
+  border: none;
+  border-radius: 10px;
+  transition: all 0.2s ease-in-out;
+  cursor: pointer;
+}
+
+.purple-button:hover {
+  background-color: rgb(92, 12, 196);
+}

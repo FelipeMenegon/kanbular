@@ -1,4 +1,5 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, inject, Output } from '@angular/core';
+import { TaskService } from '../../services/task.service';
 
 @Component({
   imports: [],
@@ -6,4 +7,6 @@ import { Component } from '@angular/core';
   styleUrl: './modaltask.scss',
   templateUrl: './modaltask.html',
 })
-export class Modaltask {}
+export class Modaltask {
+  public taskService = inject(TaskService);
+}

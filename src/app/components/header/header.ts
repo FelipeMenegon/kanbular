@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { TaskService } from '../../services/task.service';
 
 @Component({
@@ -8,5 +8,5 @@ import { TaskService } from '../../services/task.service';
   templateUrl: './header.html',
 })
 export class Header {
-  constructor(private taskService: TaskService) {}
+  public taskService = inject(TaskService);
 }

@@ -2,9 +2,10 @@ import { Component, inject } from '@angular/core';
 import { Task } from '../../models/task';
 import { TaskComponent } from '../task/task';
 import { TaskService } from '../../services/task.service';
+import { Modaltask } from '../modaltask/modaltask';
 
 @Component({
-  imports: [TaskComponent],
+  imports: [TaskComponent, Modaltask],
   selector: 'app-kanban',
   styleUrl: './kanban.scss',
   templateUrl: './kanban.html',
