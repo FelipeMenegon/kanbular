@@ -4,43 +4,60 @@
 
 <div class="cards">
   <div class="card">
-    <a>Backlog</a>
-    <button class="icon-button">
-      <span class="material-symbols-outlined"> more_vert </span>
-    </button>
+
+    <div class="card-header">
+      <a>Backlog</a>
+      <button class="icon-button">
+        <span class="material-symbols-outlined"> more_vert </span>
+      </button>
+    </div>
     @for (task of taskService.tasks(); track task.id) {
+    @if (task.status === 'backlog') {
     <app-task [task]="task"></app-task>
+    }
     }
   </div>
 
   <div class="card">
-    <a>A Fazer</a>
-    <button class="icon-button">
-      <span class="material-symbols-outlined"> more_vert </span>
-    </button>
+    <div class="card-header">
+      <a>A Fazer</a>
+      <button class="icon-button">
+        <span class="material-symbols-outlined"> more_vert </span>
+      </button>
+    </div>
 
     @for (task of taskService.tasks(); track task.id) {
+    @if (task.status === 'todo') {
     <app-task [task]="task"></app-task>
+    }
     }
   </div>
 
   <div class="card">
-    <a>Em Andamento</a>
-    <button class="icon-button">
-      <span class="material-symbols-outlined"> more_vert </span>
-    </button>
+    <div class="card-header">
+      <a>Em Andamento</a>
+      <button class="icon-button">
+        <span class="material-symbols-outlined"> more_vert </span>
+      </button>
+    </div>
     @for (task of taskService.tasks() ; track task.id) {
+    @if (task.status === 'in-progress') {
     <app-task [task]="task"></app-task>
+    }
     }
   </div>
 
   <div class="card">
-    <a>Concluído</a>
-    <button class="icon-button">
-      <span class="material-symbols-outlined"> more_vert </span>
-    </button>
+     <div class="card-header">
+      <a>Concluído</a>
+      <button class="icon-button">
+        <span class="material-symbols-outlined"> more_vert </span>
+      </button>
+    </div>
     @for (task of taskService.tasks() ; track task.id) {
+    @if (task.status === 'done') {
     <app-task [task]="task"></app-task>
+    }
     }
   </div>
 </div>
