@@ -1,11 +1,39 @@
-import { EventEmitter, Output, Service, signal } from '@angular/core';
+import { Injectable, effect, signal } from '@angular/core';
 import { Task } from '../models/task';
 
-@Service()
+@Injectable({
+  providedIn: 'root'
+})
 export class TaskService {
-  tasks = signal<Task[]>([]);
+
+  tasks = signal<Task[]>(this.loadTasks());
 
   openedModal = signal(false);
+
+  constructor() {
+    effect(() => {
+      localStorage.setItem('tasks', JSON.stringify(this.tasks()));
+    });
+  }
+
+  loadTasks(): Task[] {
+    const savedTasks = localStorage.getItem('tasks');
+
+    if (!savedTasks) {
+      return [];
+    }
+
+    try {
+      const tasks: Task[] = JSON.parse(savedTasks);
+
+      return tasks.map(task => ({
+        ...task,
+        createdAt: new Date(task.createdAt)
+      }));
+    } catch {
+      return [];
+    }
+  }
 
   abrirModal() {
     this.openedModal.set(true);
@@ -15,16 +43,20 @@ export class TaskService {
     this.openedModal.set(false);
   }
 
-  createTask(title: string, description: string, priority: 'low' | 'medium' | 'high') {
+  createTask(
+    title: string,
+    description: string,
+    priority: 'low' | 'medium' | 'high'
+  ) {
     const newTask: Task = {
-      id: this.tasks().length + 1,
-      title: title,
-      description: description,
-      priority: priority,
+      id: Date.now(),
+      title,
+      description,
+      priority,
       status: 'backlog',
       createdAt: new Date(),
     };
 
-    this.tasks.update((tasks) => [...tasks, newTask]);
+    this.tasks.update(tasks => [...tasks, newTask]);
   }
 }
