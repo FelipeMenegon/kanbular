@@ -35,12 +35,18 @@ export class TaskService {
     }
   }
 
-  abrirModal() {
+  openModal() {
     this.openedModal.set(true);
   }
 
-  fecharModal() {
+  closeModals() {
     this.openedModal.set(false);
+  }
+
+  updateTaskStatus(taskId: number, newStatus: Task['status']) {
+    this.tasks.update(tasks => 
+      tasks.map(task => task.id === taskId ? { ...task, status: newStatus } : task)
+    );
   }
 
   createTask(

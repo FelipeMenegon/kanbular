@@ -1,13 +1,13 @@
 @if (taskService.openedModal()) {
-  <app-modaltask></app-modaltask>
+<app-modaltask></app-modaltask>
 }
 
 <div class="header">
   <h1>Área Central</h1>
 </div>
 
-<div class="cards">
-  <div class="card">
+<div class="cards" cdkDropListGroup>
+  <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'backlog')">
 
     <div class="card-header">
       <a>Backlog</a>
@@ -17,12 +17,13 @@
     </div>
     @for (task of taskService.tasks(); track task.id) {
     @if (task.status === 'backlog') {
-    <app-task [task]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
     }
     }
   </div>
 
-  <div class="card">
+  <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'todo')">
+
     <div class="card-header">
       <a>A Fazer</a>
       <button class="icon-button">
@@ -32,12 +33,13 @@
 
     @for (task of taskService.tasks(); track task.id) {
     @if (task.status === 'todo') {
-    <app-task [task]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
     }
     }
   </div>
 
-  <div class="card">
+  <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'in-progress')">
+
     <div class="card-header">
       <a>Em Andamento</a>
       <button class="icon-button">
@@ -46,13 +48,13 @@
     </div>
     @for (task of taskService.tasks() ; track task.id) {
     @if (task.status === 'in-progress') {
-    <app-task [task]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
     }
     }
   </div>
 
-  <div class="card">
-     <div class="card-header">
+  <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'done')">
+    <div class="card-header">
       <a>Concluído</a>
       <button class="icon-button">
         <span class="material-symbols-outlined"> more_vert </span>
@@ -60,7 +62,7 @@
     </div>
     @for (task of taskService.tasks() ; track task.id) {
     @if (task.status === 'done') {
-    <app-task [task]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
     }
     }
   </div>

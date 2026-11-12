@@ -74,3 +74,31 @@ a {
 .icon-button span {
   font-size: 24px;
 }
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 10px;
+  opacity: 0.9;
+  cursor: grabbing;
+}
+
+.cdk-drag-placeholder {
+  opacity: 0.3;
+}
+
+.cdk-drop-list-dragging {
+  background-color: #cdcdcd;
+  transition: background-color 0.2s ease-in-out;
+}
+
+.cdk-drag-animating {
+  transition: transform 250ms ease;
+}
+
+.cdk-drag {
+  cursor: grab;
+}
+
+.cdk-drag:active {
+  cursor: grabbing;
+}
