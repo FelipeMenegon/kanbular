@@ -22,6 +22,7 @@
   flex-direction: column;
   align-items: stretch;
   gap: 12px;
+  transition: background-color 200ms ease-in-out;
 }
 
 .card-header {
@@ -88,7 +89,6 @@ a {
 
 .cdk-drop-list-dragging {
   background-color: #cdcdcd;
-  transition: background-color 0.2s ease-in-out;
 }
 
 .cdk-drag-animating {
