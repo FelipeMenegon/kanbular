@@ -17,7 +17,7 @@
     </div>
     @for (task of taskService.tasks(); track task.id) {
     @if (task.status === 'backlog') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
     }
     }
   </div>
@@ -33,7 +33,7 @@
 
     @for (task of taskService.tasks(); track task.id) {
     @if (task.status === 'todo') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
     }
     }
   </div>
@@ -48,7 +48,7 @@
     </div>
     @for (task of taskService.tasks() ; track task.id) {
     @if (task.status === 'in-progress') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
     }
     }
   </div>
@@ -62,7 +62,7 @@
     </div>
     @for (task of taskService.tasks() ; track task.id) {
     @if (task.status === 'done') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task"></app-task>
+    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
     }
     }
   </div>

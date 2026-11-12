@@ -15,42 +15,13 @@ html, body {
   overflow: hidden;
 }
 
-/* Quando o mouse estiver sobre a tarefa */
+
 app-task[cdkDrag],
 app-task[cdkDrag] * {
   cursor: grab !important;
 }
 
-/* Enquanto estiver arrastando */
-.cdk-drag-dragging,
-.cdk-drag-dragging * {
-  cursor: grabbing !important;
-}
-
-/* Prévia da tarefa durante o arraste */
-.cdk-drag-preview,
-.cdk-drag-preview * {
-  cursor: grabbing !important;
-}
-
-.cdk-drop-list-dragging,
-.cdk-drop-list-dragging * {
-  cursor: grabbing !important;
-}
-
-.cdk-drop-list-receiving,
-.cdk-drop-list-receiving * {
-  cursor: grabbing !important;
-}
-
-/* Cursor padrão da tarefa */
-app-task[cdkDrag],
-app-task[cdkDrag] * {
-  cursor: grab !important;
-}
-
-/* Cursor enquanto arrasta */
-body.cdk-dragging,
-body.cdk-dragging * {
+body.is-dragging,
+body.is-dragging * {
   cursor: grabbing !important;
 }

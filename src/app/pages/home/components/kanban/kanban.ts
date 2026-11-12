@@ -12,10 +12,17 @@ import { Task } from '../../../../shared/models/task';
   templateUrl: './kanban.html',
 })
 export class Kanban {
-
   drop(event: CdkDragDrop<any>, newStatus: Task['status']) {
     const task = event.item.data;
     this.taskService.updateTaskStatus(task.id, newStatus);
+  }
+
+  onDragStarted() {
+    document.body.classList.add('is-dragging');
+  }
+
+  onDragEnded() {
+    document.body.classList.remove('is-dragging');
   }
 
   public taskService = inject(TaskService);
