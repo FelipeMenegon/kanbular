@@ -17,6 +17,9 @@ export class Kanban {
 
     this.taskService.updateTaskPosition(task.id, newStatus, event.currentIndex);
   }
+  ngOnInit() {
+    document.addEventListener('mouseup', this.onDragEnded);
+  }
 
   onDragStarted() {
     document.body.classList.add('is-dragging');

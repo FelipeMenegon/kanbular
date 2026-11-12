@@ -25,3 +25,8 @@ body.is-dragging,
 body.is-dragging * {
   cursor: grabbing !important;
 }
+
+app-task[cdkDrag]:active,
+app-task[cdkDrag]:active * {
+  cursor: grabbing !important;
+}
