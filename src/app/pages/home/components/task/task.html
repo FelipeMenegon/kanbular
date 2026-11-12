@@ -1,7 +1,12 @@
-<div class="taskcontainer">
+<div class="task-container">
     <div class="task">
-        <h3>{{ task.title }}</h3>
+        <div class="task-header">
+            <h3>{{ task.title }}</h3>
+            <p>{{ task.createdAt | date:'short' }}</p>
+        </div>
         <p>{{ task.description }}</p>
-        <span [class]="task.priority">{{ task.priority }}</span>
+        <span [class]="task.priority">
+            {{ priorityLabels[task.priority] }}
+        </span>
     </div>
 </div>
