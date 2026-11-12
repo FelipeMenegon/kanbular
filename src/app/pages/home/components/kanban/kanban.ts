@@ -12,9 +12,10 @@ import { Task } from '../../../../shared/models/task';
   templateUrl: './kanban.html',
 })
 export class Kanban {
-  drop(event: CdkDragDrop<any>, newStatus: Task['status']) {
+  drop(event: CdkDragDrop<Task[]>, newStatus: Task['status']) {
     const task = event.item.data;
-    this.taskService.updateTaskStatus(task.id, newStatus);
+
+    this.taskService.updateTaskPosition(task.id, newStatus, event.currentIndex);
   }
 
   onDragStarted() {

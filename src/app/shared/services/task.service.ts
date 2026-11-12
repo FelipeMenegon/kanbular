@@ -2,10 +2,9 @@ import { Injectable, effect, signal } from '@angular/core';
 import { Task } from '../models/task';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class TaskService {
-
   tasks = signal<Task[]>(this.loadTasks());
 
   openedModal = signal(false);
@@ -26,9 +25,9 @@ export class TaskService {
     try {
       const tasks: Task[] = JSON.parse(savedTasks);
 
-      return tasks.map(task => ({
+      return tasks.map((task) => ({
         ...task,
-        createdAt: new Date(task.createdAt)
+        createdAt: new Date(task.createdAt),
       }));
     } catch {
       return [];
@@ -43,17 +42,27 @@ export class TaskService {
     this.openedModal.set(false);
   }
 
-  updateTaskStatus(taskId: number, newStatus: Task['status']) {
-    this.tasks.update(tasks => 
-      tasks.map(task => task.id === taskId ? { ...task, status: newStatus } : task)
-    );
+  updateTaskPosition(taskId: number, newStatus: Task['status'], newPosition: number) {
+    this.tasks.update((tasks) => {
+      const updatedTasks = tasks.filter((task) => task.id !== taskId);
+
+      const task = tasks.find((task) => task.id === taskId);
+
+      if (!task) return tasks;
+
+      task.status = newStatus;
+
+      const tasksInColumn = updatedTasks.filter((task) => task.status === newStatus);
+
+      tasksInColumn.splice(newPosition, 0, task);
+
+      const otherTasks = updatedTasks.filter((task) => task.status !== newStatus);
+
+      return [...otherTasks, ...tasksInColumn];
+    });
   }
 
-  createTask(
-    title: string,
-    description: string,
-    priority: 'low' | 'medium' | 'high'
-  ) {
+  createTask(title: string, description: string, priority: 'low' | 'medium' | 'high') {
     const newTask: Task = {
       id: Date.now(),
       title,
@@ -63,6 +72,6 @@ export class TaskService {
       createdAt: new Date(),
     };
 
-    this.tasks.update(tasks => [...tasks, newTask]);
+    this.tasks.update((tasks) => [...tasks, newTask]);
   }
 }
