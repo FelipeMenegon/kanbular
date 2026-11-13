@@ -42,21 +42,37 @@ export class TaskService {
     this.openedModal.set(false);
   }
 
-  updateTaskPosition(taskId: number, newStatus: Task['status'], newPosition: number) {
-    this.tasks.update((tasks) => {
-      const updatedTasks = tasks.filter((task) => task.id !== taskId);
+  updateTaskPosition(
+    taskId: number,
+    newStatus: Task['status'],
+    newPosition: number
+  ) {
+    this.tasks.update(tasks => {
+      const updatedTasks = tasks.map(task => ({ ...task }));
 
-      const task = tasks.find((task) => task.id === taskId);
+      const taskIndex = updatedTasks.findIndex(
+        task => task.id === taskId
+      );
 
-      if (!task) return tasks;
+      if (taskIndex === -1) return tasks;
 
-      task.status = newStatus;
+      const [movedTask] = updatedTasks.splice(taskIndex, 1);
 
-      const tasksInColumn = updatedTasks.filter((task) => task.status === newStatus);
+      movedTask.status = newStatus;
 
-      tasksInColumn.splice(newPosition, 0, task);
+      const tasksInColumn = updatedTasks
+        .filter(task => task.status === newStatus)
+        .sort((a, b) => a.position - b.position);
 
-      const otherTasks = updatedTasks.filter((task) => task.status !== newStatus);
+      tasksInColumn.splice(newPosition, 0, movedTask);
+
+      tasksInColumn.forEach((task, index) => {
+        task.position = index;
+      });
+
+      const otherTasks = updatedTasks.filter(
+        task => task.status !== newStatus
+      );
 
       return [...otherTasks, ...tasksInColumn];
     });
@@ -70,6 +86,7 @@ export class TaskService {
       priority,
       status: 'backlog',
       createdAt: new Date(),
+      position: this.tasks().filter(task => task.status === 'backlog').length,
     };
 
     this.tasks.update((tasks) => [...tasks, newTask]);

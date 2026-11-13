@@ -1,5 +1,6 @@
+
 @if (taskService.openedModal()) {
-<app-modaltask></app-modaltask>
+  <app-modaltask></app-modaltask>
 }
 
 <div class="header">
@@ -7,63 +8,149 @@
 </div>
 
 <div class="cards" cdkDropListGroup>
+
+  <!-- Backlog -->
   <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'backlog')">
 
     <div class="card-header">
-      <a>Backlog 📥</a>
-      <button class="icon-button">
-        <span class="material-symbols-outlined"> more_vert </span>
-      </button>
+      <a>📥 Backlog</a>
+
+      <div class="sort-container">
+        <button class="icon-button" (click)="toggleSortMenu('backlog')">
+          <span class="material-symbols-outlined">more_vert</span>
+        </button>
+
+        @if (showSortMenu() === 'backlog') {
+          <div class="sort-menu">
+            <button (click)="setSortOrder('newest', 'backlog')">
+              Mais recentes primeiro
+            </button>
+
+            <button (click)="setSortOrder('oldest', 'backlog')">
+              Mais antigas primeiro
+            </button>
+          </div>
+        }
+      </div>
     </div>
-    @for (task of taskService.tasks(); track task.id) {
-    @if (task.status === 'backlog') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
-    }
+
+    @for (task of sortedTasks('backlog'); track task.id) {
+      <app-task
+        [task]="task"
+        cdkDrag
+        [cdkDragData]="task"
+        (cdkDragStarted)="onDragStarted()"
+        (cdkDragEnded)="onDragEnded()">
+      </app-task>
     }
   </div>
 
+  <!-- A Fazer -->
   <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'todo')">
 
     <div class="card-header">
-      <a>A Fazer 📋</a>
-      <button class="icon-button">
-        <span class="material-symbols-outlined"> more_vert </span>
-      </button>
+      <a>📋 A Fazer</a>
+
+      <div class="sort-container">
+        <button class="icon-button" (click)="toggleSortMenu('todo')">
+          <span class="material-symbols-outlined">more_vert</span>
+        </button>
+
+        @if (showSortMenu() === 'todo') {
+          <div class="sort-menu">
+            <button (click)="setSortOrder('newest', 'todo')">
+              Mais recentes primeiro
+            </button>
+
+            <button (click)="setSortOrder('oldest', 'todo')">
+              Mais antigas primeiro
+            </button>
+          </div>
+        }
+      </div>
     </div>
 
-    @for (task of taskService.tasks(); track task.id) {
-    @if (task.status === 'todo') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
-    }
+    @for (task of sortedTasks('todo'); track task.id) {
+      <app-task
+        [task]="task"
+        cdkDrag
+        [cdkDragData]="task"
+        (cdkDragStarted)="onDragStarted()"
+        (cdkDragEnded)="onDragEnded()">
+      </app-task>
     }
   </div>
 
+  <!-- Em Andamento -->
   <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'in-progress')">
 
     <div class="card-header">
-      <a>Em Andamento 🚀</a>
-      <button class="icon-button">
-        <span class="material-symbols-outlined"> more_vert </span>
-      </button>
+      <a>🚀 Em Andamento</a>
+
+      <div class="sort-container">
+        <button class="icon-button" (click)="toggleSortMenu('in-progress')">
+          <span class="material-symbols-outlined">more_vert</span>
+        </button>
+
+        @if (showSortMenu() === 'in-progress') {
+          <div class="sort-menu">
+            <button (click)="setSortOrder('newest', 'in-progress')">
+              Mais recentes primeiro
+            </button>
+
+            <button (click)="setSortOrder('oldest', 'in-progress')">
+              Mais antigas primeiro
+            </button>
+          </div>
+        }
+      </div>
     </div>
-    @for (task of taskService.tasks() ; track task.id) {
-    @if (task.status === 'in-progress') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
-    }
+
+    @for (task of sortedTasks('in-progress'); track task.id) {
+      <app-task
+        [task]="task"
+        cdkDrag
+        [cdkDragData]="task"
+        (cdkDragStarted)="onDragStarted()"
+        (cdkDragEnded)="onDragEnded()">
+      </app-task>
     }
   </div>
 
+  <!-- Concluído -->
   <div class="card" cdkDropList (cdkDropListDropped)="drop($event, 'done')">
+
     <div class="card-header">
-      <a>Concluído ✅</a>
-      <button class="icon-button">
-        <span class="material-symbols-outlined"> more_vert </span>
-      </button>
+      <a>✅ Concluído</a>
+
+      <div class="sort-container">
+        <button class="icon-button" (click)="toggleSortMenu('done')">
+          <span class="material-symbols-outlined">more_vert</span>
+        </button>
+
+        @if (showSortMenu() === 'done') {
+          <div class="sort-menu">
+            <button (click)="setSortOrder('newest', 'done')">
+              Mais recentes primeiro
+            </button>
+
+            <button (click)="setSortOrder('oldest', 'done')">
+              Mais antigas primeiro
+            </button>
+          </div>
+        }
+      </div>
     </div>
-    @for (task of taskService.tasks() ; track task.id) {
-    @if (task.status === 'done') {
-    <app-task [task]="task" cdkDrag [cdkDragData]="task" (cdkDragStarted)="onDragStarted()" (cdkDragEnded)="onDragEnded()"></app-task>
-    }
+
+    @for (task of sortedTasks('done'); track task.id) {
+      <app-task
+        [task]="task"
+        cdkDrag
+        [cdkDragData]="task"
+        (cdkDragStarted)="onDragStarted()"
+        (cdkDragEnded)="onDragEnded()">
+      </app-task>
     }
   </div>
+
 </div>
