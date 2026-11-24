@@ -42,41 +42,54 @@ export class TaskService {
     this.openedModal.set(false);
   }
 
-  updateTaskPosition(
-    taskId: number,
-    newStatus: Task['status'],
-    newPosition: number
-  ) {
-    this.tasks.update(tasks => {
-      const updatedTasks = tasks.map(task => ({ ...task }));
+updateTaskPosition(
+  taskId: number,
+  newStatus: Task['status'],
+  newPosition: number
+) {
+  this.tasks.update(tasks => {
 
-      const taskIndex = updatedTasks.findIndex(
-        task => task.id === taskId
-      );
+    // 1. Cria cópias das tarefas
+    const updatedTasks = tasks.map(task => ({ ...task }));
 
-      if (taskIndex === -1) return tasks;
+    // 2. Encontra a tarefa que será movida
+    const taskIndex = updatedTasks.findIndex(task => task.id === taskId);
 
-      const [movedTask] = updatedTasks.splice(taskIndex, 1);
+    if (taskIndex === -1) return tasks;
 
-      movedTask.status = newStatus;
+    // 3. Remove a tarefa da lista
+    const [movedTask] = updatedTasks.splice(taskIndex, 1);
 
-      const tasksInColumn = updatedTasks
-        .filter(task => task.status === newStatus)
-        .sort((a, b) => a.position - b.position);
+    // 4. Atualiza o status da tarefa
+    movedTask.status = newStatus;
 
-      tasksInColumn.splice(newPosition, 0, movedTask);
+    // 5. Separa as tarefas da nova coluna
+    const tasksInColumn = updatedTasks
+      .filter(task => task.status === newStatus)
+      .sort((a, b) => a.position - b.position);
 
-      tasksInColumn.forEach((task, index) => {
-        task.position = index;
-      });
+    // 6. Insere a tarefa na nova posição
+    tasksInColumn.splice(newPosition, 0, movedTask);
 
-      const otherTasks = updatedTasks.filter(
-        task => task.status !== newStatus
-      );
+    // 7. Atualiza as posições
+    this.updatePositions(tasksInColumn);
 
-      return [...otherTasks, ...tasksInColumn];
-    });
-  }
+    // 8. Separa as tarefas das outras colunas
+    const otherTasks = updatedTasks.filter(
+      task => task.status !== newStatus
+    );
+
+    // 9. Junta todas as tarefas novamente
+    return [...otherTasks, ...tasksInColumn];
+  });
+}
+
+// Atualiza a posição de cada tarefa
+private updatePositions(tasks: Task[]) {
+  tasks.forEach((task, index) => {
+    task.position = index;
+  });
+}
 
   createTask(title: string, description: string, priority: 'low' | 'medium' | 'high') {
     const newTask: Task = {

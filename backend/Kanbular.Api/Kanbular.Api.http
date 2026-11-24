@@ -1,0 +1,6 @@
+@Kanbular.Api_HostAddress = http://localhost:5057
+
+GET {{Kanbular.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
