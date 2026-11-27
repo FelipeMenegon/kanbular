@@ -44,6 +44,22 @@ public class TasksController : ControllerBase
         return task;
     }
 
+    // PUT /api/tasks/5
+    [HttpPut("{id}")]
+    public async Task<ActionResult<TaskItem>> Update(int id, UpdateTaskRequest request)
+    {
+        var task = await _db.Tasks.FindAsync(id);
+        if (task is null) return NotFound();
+
+        task.Title = request.Title;
+        task.Description = request.Description;
+        task.Priority = request.Priority;
+
+        await _db.SaveChangesAsync();
+
+        return task;
+    }
+
     // PUT /api/tasks/5/move
     [HttpPut("{id}/move")]
     public async Task<IActionResult> Move(int id, MoveTaskRequest request)

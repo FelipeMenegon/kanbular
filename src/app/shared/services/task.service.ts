@@ -13,6 +13,9 @@ export class TaskService {
 
   openedModal = signal(false);
 
+  // task aberta no modal de detalhes (null = fechado)
+  editingTask = signal<Task | null>(null);
+
   constructor() {
     this.loadTasks();
   }
@@ -30,11 +33,18 @@ export class TaskService {
   }
 
   openModal() {
+    this.editingTask.set(null);
     this.openedModal.set(true);
+  }
+
+  openEditModal(task: Task) {
+    this.openedModal.set(false);
+    this.editingTask.set(task);
   }
 
   closeModals() {
     this.openedModal.set(false);
+    this.editingTask.set(null);
   }
 
   updateTaskPosition(taskId: number, newStatus: Task['status'], newPosition: number) {
@@ -78,5 +88,16 @@ export class TaskService {
     this.http.post<Task>(this.apiUrl, { title, description, priority }).subscribe((task) => {
       this.tasks.update((tasks) => [...tasks, { ...task, createdAt: new Date(task.createdAt) }]);
     });
+  }
+
+  // PUT /api/tasks/{id}
+  updateTask(taskId: number, title: string, description: string, priority: Task['priority']) {
+    this.tasks.update((tasks) =>
+      tasks.map((task) => (task.id === taskId ? { ...task, title, description, priority } : task)),
+    );
+
+    this.http
+      .put(`${this.apiUrl}/${taskId}`, { title, description, priority })
+      .subscribe({ error: () => this.loadTasks() });
   }
 }

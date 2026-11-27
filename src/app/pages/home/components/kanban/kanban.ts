@@ -4,10 +4,11 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { TaskComponent } from '../task/task';
 import { TaskService } from '../../../../shared/services/task.service';
 import { Modaltask } from '../modaltask/modaltask';
+import { Taskdetail } from '../taskdetail/taskdetail';
 import { Task } from '../../../../shared/models/task';
 
 @Component({
-  imports: [TaskComponent, Modaltask, DragDropModule],
+  imports: [TaskComponent, Modaltask, Taskdetail, DragDropModule],
   selector: 'app-kanban',
   styleUrl: './kanban.scss',
   templateUrl: './kanban.html',
@@ -85,5 +86,19 @@ export class Kanban {
 
   onDragEnded() {
     document.body.classList.remove('is-dragging');
+  }
+
+  // o click dispara logo depois de soltar a task; isso evita abrir o modal ao arrastar
+  private justDragged = false;
+
+  onTaskDragEnded() {
+    this.onDragEnded();
+    this.justDragged = true;
+    setTimeout(() => (this.justDragged = false));
+  }
+
+  openTask(task: Task) {
+    if (this.justDragged) return;
+    this.taskService.openEditModal(task);
   }
 }

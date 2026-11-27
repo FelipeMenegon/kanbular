@@ -1,0 +1,139 @@
+<div class="detail-background" (click)="close()">
+  <div
+    class="detail"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="detail-title"
+    (click)="$event.stopPropagation()">
+
+    <!-- Barra superior: onde a task está -->
+    <div class="detail-topbar">
+      <div class="breadcrumb">
+        <span class="breadcrumb-column">
+          {{ currentStatus.icon }} {{ currentStatus.label }}
+        </span>
+        <span class="material-symbols-outlined breadcrumb-sep">chevron_right</span>
+        <span class="breadcrumb-id">Tarefa #{{ task().id }}</span>
+      </div>
+
+      <button type="button" class="icon-button" (click)="close()" aria-label="Fechar">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    </div>
+
+    <div class="detail-content">
+
+      <!-- Conteúdo principal -->
+      <main class="detail-main">
+        <div class="editable editable-title">
+          <textarea
+            id="detail-title"
+            class="title-input"
+            name="title"
+            rows="1"
+            maxlength="100"
+            placeholder="Título da tarefa"
+            aria-label="Título"
+            [(ngModel)]="title"
+            (keydown.enter)="blurOnEnter($event)"></textarea>
+          <span class="material-symbols-outlined edit-hint">edit</span>
+        </div>
+
+        @if (!title.trim()) {
+          <p class="field-error">O título não pode ficar vazio.</p>
+        }
+
+        <section class="section">
+          <h3 class="section-label">
+            <span class="material-symbols-outlined">notes</span>
+            Descrição
+          </h3>
+
+          <div class="editable editable-description">
+            <textarea
+              class="description-input"
+              name="description"
+              placeholder="Clique para adicionar uma descrição..."
+              aria-label="Descrição"
+              [(ngModel)]="description"></textarea>
+            <span class="material-symbols-outlined edit-hint">edit</span>
+          </div>
+        </section>
+      </main>
+
+      <!-- Propriedades -->
+      <aside class="detail-side">
+        <div class="property">
+          <span class="property-label">Status</span>
+          <div class="status-list" role="radiogroup" aria-label="Status">
+            @for (option of statuses; track option.value) {
+              <button
+                type="button"
+                role="radio"
+                class="status-option"
+                [class.selected]="status === option.value"
+                [attr.aria-checked]="status === option.value"
+                (click)="status = option.value">
+                <span class="status-icon">{{ option.icon }}</span>
+                {{ option.label }}
+                @if (status === option.value) {
+                  <span class="material-symbols-outlined check">check</span>
+                }
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="property">
+          <span class="property-label">Prioridade</span>
+          <div class="priority-group" role="radiogroup" aria-label="Prioridade">
+            @for (option of priorities; track option.value) {
+              <button
+                type="button"
+                role="radio"
+                [class]="'priority-chip ' + option.value"
+                [class.selected]="priority === option.value"
+                [attr.aria-checked]="priority === option.value"
+                (click)="priority = option.value">
+                {{ option.label }}
+              </button>
+            }
+          </div>
+        </div>
+
+        <div class="property">
+          <span class="property-label">Criada em</span>
+          <div class="created">
+            <span class="material-symbols-outlined">calendar_today</span>
+            <div>
+              <span class="created-date">{{ createdAtLabel }}</span>
+              <span class="created-ago">{{ createdAgo }}</span>
+            </div>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <!-- Rodapé: só chama atenção quando há algo pra salvar -->
+    <div class="detail-footer" [class.dirty]="isDirty">
+      @if (isDirty) {
+        <span class="footer-status">
+          <span class="unsaved-dot"></span>
+          Alterações não salvas
+        </span>
+        <div class="footer-actions">
+          <button type="button" class="button-secondary" (click)="reset()">Descartar</button>
+          <button type="button" class="button-primary" [disabled]="!canSave" (click)="save()">
+            Salvar
+            <kbd>Ctrl ↵</kbd>
+          </button>
+        </div>
+      } @else {
+        <span class="footer-hint">
+          <span class="material-symbols-outlined">touch_app</span>
+          Clique em qualquer campo para editar
+        </span>
+      }
+    </div>
+  </div>
+</div>

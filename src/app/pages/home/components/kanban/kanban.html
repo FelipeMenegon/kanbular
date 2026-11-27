@@ -3,6 +3,10 @@
   <app-modaltask></app-modaltask>
 }
 
+@if (taskService.editingTask(); as task) {
+  <app-taskdetail [task]="task"></app-taskdetail>
+}
+
 <div class="header">
   <h1>Área Central</h1>
 </div>
@@ -40,7 +44,8 @@
         cdkDrag
         [cdkDragData]="task"
         (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onDragEnded()">
+        (cdkDragEnded)="onTaskDragEnded()"
+        (click)="openTask(task)">
       </app-task>
     }
   </div>
@@ -76,7 +81,8 @@
         cdkDrag
         [cdkDragData]="task"
         (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onDragEnded()">
+        (cdkDragEnded)="onTaskDragEnded()"
+        (click)="openTask(task)">
       </app-task>
     }
   </div>
@@ -112,7 +118,8 @@
         cdkDrag
         [cdkDragData]="task"
         (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onDragEnded()">
+        (cdkDragEnded)="onTaskDragEnded()"
+        (click)="openTask(task)">
       </app-task>
     }
   </div>
@@ -148,7 +155,8 @@
         cdkDrag
         [cdkDragData]="task"
         (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onDragEnded()">
+        (cdkDragEnded)="onTaskDragEnded()"
+        (click)="openTask(task)">
       </app-task>
     }
   </div>
