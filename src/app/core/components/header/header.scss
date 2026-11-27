@@ -59,33 +59,31 @@ h3 {
   border-radius: 50px;
 }
 
-button {
-  display: flex;
+.new-task-button {
+  display: inline-flex;
   align-items: center;
-  justify-content: center;
-  gap: 3px;
+  gap: 6px;
 
-  width: 132px;
   height: 42px;
+  padding: 0 18px 0 14px;
 
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
   color: white;
   background-color: rgb(100, 13, 214);
 
   border: none;
   border-radius: 10px;
-  transition: all 0.2s ease-in-out;
   cursor: pointer;
-}
 
-button:hover {
-  background-color: rgb(92, 12, 196);
-}
+  i {
+    font-size: 20px;
+  }
 
-button i {
-  font-size: 20px;
-}
-
-i {
-  width: 20px;
-  height: 20px;
+  &:hover {
+    background-color: rgb(86, 10, 186);
+  }
 }

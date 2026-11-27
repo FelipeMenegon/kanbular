@@ -1,23 +1,76 @@
-<div class="modal-background">
-    <div class="modal">
-        <h2>Nova tarefa</h2>
+<div class="modal-background" (click)="close()">
+  <form
+    class="modal"
+    role="dialog"
+    aria-modal="true"
+    aria-labelledby="modal-title"
+    (click)="$event.stopPropagation()"
+    (ngSubmit)="submit()">
 
-        <input type="text" placeholder="Título" [(ngModel)]="title">
+    <div class="modal-header">
+      <div class="modal-heading">
+        <span class="modal-icon material-symbols-outlined">add_task</span>
+        <div>
+          <h2 id="modal-title">Nova tarefa</h2>
+          <p>Adicione uma tarefa ao backlog</p>
+        </div>
+      </div>
 
-        <textarea placeholder="Descrição" [(ngModel)]="description"></textarea>
-
-        <select [(ngModel)]="priority">
-            <option value="high">Alta</option>
-            <option value="medium">Média</option>
-            <option value="low">Baixa</option>
-        </select>
-
-        <button (click)="taskService.createTask(title, description, priority)" class="purple-button">
-            Criar
-        </button>
-
-        <button (click)="taskService.closeModals()" class="purple-button-close">
-            Fechar
-        </button>
+      <button type="button" class="icon-button" (click)="close()" aria-label="Fechar">
+        <span class="material-symbols-outlined">close</span>
+      </button>
     </div>
+
+    <div class="modal-body">
+      <label class="field">
+        <span class="field-label">Título</span>
+        <input
+          #titleInput
+          type="text"
+          name="title"
+          placeholder="Ex: Arrumar a cama..."
+          maxlength="100"
+          autocomplete="off"
+          [(ngModel)]="title">
+      </label>
+
+      <label class="field">
+        <span class="field-label">
+          Descrição
+          <small>(Opcional)</small>
+        </span>
+        <textarea
+          name="description"
+          placeholder="Detalhes, links ou próximos passos..."
+          [(ngModel)]="description"></textarea>
+      </label>
+
+      <div class="field">
+        <span class="field-label">Prioridade</span>
+        <div class="priority-group" role="radiogroup" aria-label="Prioridade">
+          @for (option of priorities; track option.value) {
+            <button
+              type="button"
+              role="radio"
+              [class]="'priority-chip ' + option.value"
+              [class.selected]="priority === option.value"
+              [attr.aria-checked]="priority === option.value"
+              (click)="priority = option.value">
+              <span class="dot"></span>
+              {{ option.label }}
+            </button>
+          }
+        </div>
+      </div>
+    </div>
+
+    <div class="modal-footer">
+      <button type="button" class="button-secondary" (click)="close()">
+        Cancelar
+      </button>
+      <button type="submit" class="button-primary" [disabled]="!title.trim()">
+        Criar tarefa
+      </button>
+    </div>
+  </form>
 </div>
