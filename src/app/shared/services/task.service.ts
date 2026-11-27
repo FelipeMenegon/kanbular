@@ -1,12 +1,15 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { Observable, forkJoin } from 'rxjs';
 import { Task } from '../models/task';
+import { ToastService } from './toast.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
   private http = inject(HttpClient);
+  private toast = inject(ToastService);
   private apiUrl = 'http://localhost:5057/api/tasks';
 
   tasks = signal<Task[]>([]);
@@ -48,6 +51,12 @@ export class TaskService {
   }
 
   updateTaskPosition(taskId: number, newStatus: Task['status'], newPosition: number) {
+    this.moveLocally(taskId, newStatus, newPosition)
+      .subscribe({ error: () => this.loadTasks() });
+  }
+
+  // atualiza a lista na tela na hora e devolve a requisição pro servidor
+  private moveLocally(taskId: number, newStatus: Task['status'], newPosition: number) {
     this.tasks.update((tasks) => {
       const updatedTasks = tasks.map((task) => ({ ...task }));
 
@@ -72,9 +81,7 @@ export class TaskService {
       return [...otherTasks, ...tasksInColumn];
     });
 
-    this.http
-      .put(`${this.apiUrl}/${taskId}/move`, { status: newStatus, position: newPosition })
-      .subscribe({ error: () => this.loadTasks() });
+    return this.http.put(`${this.apiUrl}/${taskId}/move`, { status: newStatus, position: newPosition });
   }
 
   private updatePositions(tasks: Task[]) {
@@ -90,14 +97,37 @@ export class TaskService {
     });
   }
 
-  // PUT /api/tasks/{id}
-  updateTask(taskId: number, title: string, description: string, priority: Task['priority']) {
-    this.tasks.update((tasks) =>
-      tasks.map((task) => (task.id === taskId ? { ...task, title, description, priority } : task)),
-    );
+  // salva o que mudou no modal de detalhes (campos e/ou coluna) e avisa com um toast só
+  saveTask(
+    task: Task,
+    changes: Pick<Task, 'title' | 'description' | 'priority' | 'status'>,
+  ) {
+    const requests: Observable<unknown>[] = [];
+    const { title, description, priority, status } = changes;
 
-    this.http
-      .put(`${this.apiUrl}/${taskId}`, { title, description, priority })
-      .subscribe({ error: () => this.loadTasks() });
+    if (title !== task.title || description !== task.description || priority !== task.priority) {
+      this.tasks.update((tasks) =>
+        tasks.map((t) => (t.id === task.id ? { ...t, title, description, priority } : t)),
+      );
+
+      // PUT /api/tasks/{id}
+      requests.push(this.http.put(`${this.apiUrl}/${task.id}`, { title, description, priority }));
+    }
+
+    if (status !== task.status) {
+      // mudou de coluna: vai pro fim da nova coluna
+      const position = this.tasks().filter((t) => t.status === status).length;
+      requests.push(this.moveLocally(task.id, status, position));
+    }
+
+    if (!requests.length) return;
+
+    forkJoin(requests).subscribe({
+      next: () => this.toast.success('Tarefa salva com sucesso'),
+      error: () => {
+        this.toast.error('Não foi possível salvar a tarefa');
+        this.loadTasks();
+      },
+    });
   }
 }

@@ -1,0 +1,150 @@
+$purple: rgb(100, 13, 214);
+$text: #333333;
+$text-muted: #777777;
+$border: #e5e5e5;
+
+.toast-stack {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 10000; // acima dos modais
+
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 10px;
+
+  pointer-events: none;
+}
+
+.toast {
+  --accent: #{$purple};
+  --accent-soft: rgba(100, 13, 214, 0.1);
+
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  min-width: 280px;
+  max-width: 380px;
+  padding: 12px 10px 12px 14px;
+
+  background-color: #ffffff;
+  border: 1px solid $border;
+  border-radius: 12px;
+  box-shadow:
+    0 12px 32px rgba(20, 16, 28, 0.14),
+    0 2px 6px rgba(20, 16, 28, 0.06);
+
+  overflow: hidden;
+  pointer-events: auto;
+  animation: toastIn 0.28s cubic-bezier(0.2, 0.8, 0.2, 1);
+
+  &.error {
+    --accent: #c0392b;
+    --accent-soft: #fdecea;
+  }
+
+  &.leaving {
+    animation: toastOut 0.2s ease-in forwards;
+  }
+}
+
+.toast-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 32px;
+  height: 32px;
+
+  font-size: 20px;
+  color: var(--accent);
+  background-color: var(--accent-soft);
+  border-radius: 8px;
+}
+
+.toast-message {
+  flex: 1;
+  font-size: 14px;
+  font-weight: 600;
+  color: $text;
+}
+
+.toast-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+
+  width: 28px;
+  height: 28px;
+
+  color: $text-muted;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background-color 0.2s, color 0.2s;
+
+  span {
+    font-size: 18px;
+  }
+
+  &:hover {
+    color: $text;
+    background-color: #f2f2f2;
+  }
+}
+
+// barrinha que mostra quanto tempo falta pra sumir
+.toast-progress {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 3px;
+  width: 100%;
+
+  background-color: var(--accent);
+  opacity: 0.6;
+  transform-origin: left;
+  animation: progress 3.5s linear forwards;
+}
+
+@keyframes toastIn {
+  from {
+    opacity: 0;
+    transform: translateY(16px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@keyframes toastOut {
+  to {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+}
+
+@keyframes progress {
+  from { transform: scaleX(1); }
+  to { transform: scaleX(0); }
+}
+
+@media (max-width: 480px) {
+  .toast-stack {
+    left: 12px;
+    right: 12px;
+    bottom: 12px;
+  }
+
+  .toast {
+    min-width: 0;
+    width: 100%;
+  }
+}

@@ -89,19 +89,12 @@ export class Taskdetail implements OnInit {
   save() {
     if (!this.canSave) return;
 
-    const task = this.task();
-    const title = this.title.trim();
-    const description = this.description.trim();
-
-    if (title !== task.title || description !== task.description || this.priority !== task.priority) {
-      this.taskService.updateTask(task.id, title, description, this.priority);
-    }
-
-    // mudou de coluna: vai pro fim da nova coluna
-    if (this.status !== task.status) {
-      const position = this.taskService.tasks().filter((t) => t.status === this.status).length;
-      this.taskService.updateTaskPosition(task.id, this.status, position);
-    }
+    this.taskService.saveTask(this.task(), {
+      title: this.title.trim(),
+      description: this.description.trim(),
+      priority: this.priority,
+      status: this.status,
+    });
 
     this.close();
   }

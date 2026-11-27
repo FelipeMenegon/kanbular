@@ -2,9 +2,10 @@ import { Component, signal } from '@angular/core';
 import { Header } from './core/components/header/header';
 import { MenuBar } from './core/components/menu-bar/menu-bar';
 import { Kanban } from './pages/home/components/kanban/kanban';
+import { ToastContainer } from './core/components/toast/toast';
 
 @Component({
-  imports: [Header, MenuBar, Kanban],
+  imports: [Header, MenuBar, Kanban, ToastContainer],
   selector: 'app-root',
   styleUrl: './app.scss',
   templateUrl: './app.html',
