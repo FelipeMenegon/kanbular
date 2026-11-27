@@ -1,37 +1,32 @@
-import { Injectable, effect, signal } from '@angular/core';
+import { Injectable, inject, signal } from '@angular/core';
+import { HttpClient } from '@angular/common/http';
 import { Task } from '../models/task';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TaskService {
-  tasks = signal<Task[]>(this.loadTasks());
+  private http = inject(HttpClient);
+  private apiUrl = 'http://localhost:5057/api/tasks';
+
+  tasks = signal<Task[]>([]);
 
   openedModal = signal(false);
 
   constructor() {
-    effect(() => {
-      localStorage.setItem('tasks', JSON.stringify(this.tasks()));
-    });
+    this.loadTasks();
   }
 
-  loadTasks(): Task[] {
-    const savedTasks = localStorage.getItem('tasks');
-
-    if (!savedTasks) {
-      return [];
-    }
-
-    try {
-      const tasks: Task[] = JSON.parse(savedTasks);
-
-      return tasks.map((task) => ({
-        ...task,
-        createdAt: new Date(task.createdAt),
-      }));
-    } catch {
-      return [];
-    }
+  // GET /api/tasks
+  loadTasks() {
+    this.http.get<Task[]>(this.apiUrl).subscribe((tasks) => {
+      this.tasks.set(
+        tasks.map((task) => ({
+          ...task,
+          createdAt: new Date(task.createdAt),
+        })),
+      );
+    });
   }
 
   openModal() {
@@ -42,66 +37,48 @@ export class TaskService {
     this.openedModal.set(false);
   }
 
-updateTaskPosition(
-  taskId: number,
-  newStatus: Task['status'],
-  newPosition: number
-) {
-  this.tasks.update(tasks => {
+  updateTaskPosition(taskId: number, newStatus: Task['status'], newPosition: number) {
+    // Atualiza a tela na hora (a mesma lógica de antes)...
+    this.tasks.update((tasks) => {
+      const updatedTasks = tasks.map((task) => ({ ...task }));
 
-    // 1. Cria cópias das tarefas
-    const updatedTasks = tasks.map(task => ({ ...task }));
+      const taskIndex = updatedTasks.findIndex((task) => task.id === taskId);
 
-    // 2. Encontra a tarefa que será movida
-    const taskIndex = updatedTasks.findIndex(task => task.id === taskId);
+      if (taskIndex === -1) return tasks;
 
-    if (taskIndex === -1) return tasks;
+      const [movedTask] = updatedTasks.splice(taskIndex, 1);
 
-    // 3. Remove a tarefa da lista
-    const [movedTask] = updatedTasks.splice(taskIndex, 1);
+      movedTask.status = newStatus;
 
-    // 4. Atualiza o status da tarefa
-    movedTask.status = newStatus;
+      const tasksInColumn = updatedTasks
+        .filter((task) => task.status === newStatus)
+        .sort((a, b) => a.position - b.position);
 
-    // 5. Separa as tarefas da nova coluna
-    const tasksInColumn = updatedTasks
-      .filter(task => task.status === newStatus)
-      .sort((a, b) => a.position - b.position);
+      tasksInColumn.splice(newPosition, 0, movedTask);
 
-    // 6. Insere a tarefa na nova posição
-    tasksInColumn.splice(newPosition, 0, movedTask);
+      this.updatePositions(tasksInColumn);
 
-    // 7. Atualiza as posições
-    this.updatePositions(tasksInColumn);
+      const otherTasks = updatedTasks.filter((task) => task.status !== newStatus);
 
-    // 8. Separa as tarefas das outras colunas
-    const otherTasks = updatedTasks.filter(
-      task => task.status !== newStatus
-    );
+      return [...otherTasks, ...tasksInColumn];
+    });
 
-    // 9. Junta todas as tarefas novamente
-    return [...otherTasks, ...tasksInColumn];
-  });
-}
+    // ...e avisa o servidor. Se der erro, recarrega do banco para desfazer.
+    this.http
+      .put(`${this.apiUrl}/${taskId}/move`, { status: newStatus, position: newPosition })
+      .subscribe({ error: () => this.loadTasks() });
+  }
 
-// Atualiza a posição de cada tarefa
-private updatePositions(tasks: Task[]) {
-  tasks.forEach((task, index) => {
-    task.position = index;
-  });
-}
+  private updatePositions(tasks: Task[]) {
+    tasks.forEach((task, index) => {
+      task.position = index;
+    });
+  }
 
+  // POST /api/tasks
   createTask(title: string, description: string, priority: 'low' | 'medium' | 'high') {
-    const newTask: Task = {
-      id: Date.now(),
-      title,
-      description,
-      priority,
-      status: 'backlog',
-      createdAt: new Date(),
-      position: this.tasks().filter(task => task.status === 'backlog').length,
-    };
-
-    this.tasks.update((tasks) => [...tasks, newTask]);
+    this.http.post<Task>(this.apiUrl, { title, description, priority }).subscribe((task) => {
+      this.tasks.update((tasks) => [...tasks, { ...task, createdAt: new Date(task.createdAt) }]);
+    });
   }
 }
