@@ -1,0 +1,104 @@
+<div class="search" [class.expanded]="expanded()" [class.has-value]="query()">
+  <!-- só aparece em telas pequenas -->
+  <button class="search-toggle" type="button" aria-label="Abrir busca" (click)="focus()">
+    <span class="material-symbols-outlined">search</span>
+    @if (query()) {
+      <span class="toggle-dot" aria-hidden="true"></span>
+    }
+  </button>
+
+  <div class="search-field">
+    <button class="back" type="button" aria-label="Fechar busca" (click)="collapse()">
+      <span class="material-symbols-outlined">arrow_back</span>
+    </button>
+
+    <span class="material-symbols-outlined search-icon" aria-hidden="true">search</span>
+
+    <input
+      #input
+      type="text"
+      role="combobox"
+      autocomplete="off"
+      spellcheck="false"
+      placeholder="Procurar tarefas..."
+      aria-label="Procurar tarefas"
+      aria-controls="search-results"
+      aria-autocomplete="list"
+      [attr.aria-expanded]="showDropdown()"
+      [attr.aria-activedescendant]="
+        activeIndex() >= 0 ? 'search-option-' + results()[activeIndex()]?.task?.id : null
+      "
+      [value]="query()"
+      (input)="onInput($event)"
+      (focus)="open.set(true)"
+      (keydown)="onKeydown($event)"
+    />
+
+    @if (query()) {
+      <button class="clear" type="button" aria-label="Limpar busca" (click)="clear()">
+        <span class="material-symbols-outlined">close</span>
+      </button>
+    } @else {
+      <kbd class="shortcut" aria-hidden="true">{{ isMac ? '⌘' : 'Ctrl' }} K</kbd>
+    }
+  </div>
+
+  @if (showDropdown()) {
+    <div class="dropdown" id="search-results" role="listbox" aria-label="Resultados da busca">
+      @if (results().length) {
+        <div class="dropdown-header">
+          {{ total() }} {{ total() === 1 ? 'tarefa encontrada' : 'tarefas encontradas' }}
+        </div>
+
+        @for (result of results(); track result.task.id; let i = $index) {
+          <button
+            type="button"
+            role="option"
+            class="result"
+            [id]="'search-option-' + result.task.id"
+            [class.active]="i === activeIndex()"
+            [attr.aria-selected]="i === activeIndex()"
+            (mousedown)="$event.preventDefault()"
+            (mouseenter)="activeIndex.set(i)"
+            (click)="select(result.task)"
+          >
+            <span class="priority-dot" [class]="result.task.priority" aria-hidden="true"></span>
+
+            <span class="result-body">
+              <span class="result-title">
+                @for (seg of result.title; track $index) {
+                  @if (seg.match) {<mark>{{ seg.text }}</mark>} @else {{{ seg.text }}}
+                }
+              </span>
+              @if (result.description.length) {
+                <span class="result-desc">
+                  @for (seg of result.description; track $index) {
+                    @if (seg.match) {<mark>{{ seg.text }}</mark>} @else {{{ seg.text }}}
+                  }
+                </span>
+              }
+            </span>
+
+            <span class="status-badge" [attr.data-status]="result.task.status">
+              {{ statusLabels[result.task.status] }}
+            </span>
+          </button>
+        }
+
+        <div class="dropdown-footer">
+          @if (total() > results().length) {
+            <span>+{{ total() - results().length }} no quadro</span>
+          }
+          <span class="hints">
+            <kbd>↑</kbd><kbd>↓</kbd> navegar <kbd>↵</kbd> abrir <kbd>esc</kbd> fechar
+          </span>
+        </div>
+      } @else {
+        <div class="empty">
+          <span class="material-symbols-outlined">search_off</span>
+          <p>Nenhuma tarefa encontrada para <strong>"{{ query() }}"</strong></p>
+        </div>
+      }
+    </div>
+  }
+</div>

@@ -27,11 +27,13 @@ export class Kanban {
   });
 
   sortedTasks(status: Task['status']) {
-    const tasks = this.taskService.tasks()
-      .filter(task => task.status === status);
+    return this.sortTasks(
+      this.taskService.filteredTasks().filter((task) => task.status === status),
+      this.sortOrders()[status],
+    );
+  }
 
-    const order = this.sortOrders()[status];
-
+  private sortTasks(tasks: Task[], order: 'newest' | 'oldest' | 'manual') {
     return [...tasks].sort((a, b) => {
       if (order === 'manual') {
         return a.position - b.position;
@@ -57,8 +59,26 @@ export class Kanban {
     this.taskService.updateTaskPosition(
       task.id,
       newStatus,
-      event.currentIndex
+      this.realDropIndex(task, newStatus, event.currentIndex)
     );
+  }
+
+  // com a busca ativa a coluna mostra só parte das tasks, então o índice do drop
+  // precisa ser traduzido pra posição real na coluna completa
+  private realDropIndex(task: Task, status: Task['status'], visibleIndex: number) {
+    if (!this.taskService.isSearching()) return visibleIndex;
+
+    const visible = this.sortedTasks(status).filter((t) => t.id !== task.id);
+    const all = this.sortTasks(
+      this.taskService.tasks().filter((t) => t.status === status && t.id !== task.id),
+      'manual',
+    );
+
+    const target = visible[visibleIndex];
+    if (target) return all.findIndex((t) => t.id === target.id);
+
+    const last = visible.at(-1);
+    return last ? all.findIndex((t) => t.id === last.id) + 1 : all.length;
   }
 
   toggleSortMenu(column: string) {

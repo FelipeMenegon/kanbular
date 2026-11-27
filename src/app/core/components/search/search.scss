@@ -1,0 +1,417 @@
+$purple: rgb(100, 13, 214);
+$mobile: 768px;
+
+:host {
+  display: flex;
+  flex: 1;
+  justify-content: center;
+  min-width: 0;
+}
+
+.search {
+  position: relative;
+  width: 100%;
+  max-width: 520px;
+}
+
+/* ---------- campo ---------- */
+
+.search-field {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.search-icon {
+  position: absolute;
+  left: 12px;
+  font-size: 22px;
+  color: #888;
+  pointer-events: none;
+  transition: color 0.2s;
+}
+
+input {
+  width: 100%;
+  height: 42px;
+  padding: 0 64px 0 42px;
+
+  font-size: 14px;
+  color: #333;
+  background-color: rgb(231, 231, 231);
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  outline: none;
+
+  transition:
+    background-color 0.2s,
+    border-color 0.2s,
+    box-shadow 0.2s;
+
+  &::placeholder {
+    color: #888;
+  }
+
+  &:hover {
+    border-color: #ccc;
+  }
+
+  &:focus {
+    background-color: white;
+    border-color: $purple;
+    box-shadow: 0 0 0 3px rgba(100, 13, 214, 0.15);
+  }
+}
+
+.search-field:focus-within .search-icon {
+  color: $purple;
+}
+
+.shortcut {
+  position: absolute;
+  right: 10px;
+  pointer-events: none;
+}
+
+kbd {
+  padding: 2px 6px;
+
+  font-family: inherit;
+  font-size: 11px;
+  font-weight: 600;
+  color: #777;
+  background-color: white;
+  border: 1px solid #d5d5d5;
+  border-bottom-width: 2px;
+  border-radius: 5px;
+}
+
+.clear,
+.back,
+.search-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 0;
+  color: #666;
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+  cursor: pointer;
+
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: rgba(0, 0, 0, 0.06);
+  }
+
+  &:focus-visible {
+    outline: 2px solid $purple;
+    outline-offset: 1px;
+  }
+}
+
+.clear {
+  position: absolute;
+  right: 8px;
+  width: 28px;
+  height: 28px;
+
+  span {
+    font-size: 18px;
+  }
+}
+
+.back,
+.search-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  flex-shrink: 0;
+}
+
+.toggle-dot {
+  position: absolute;
+  top: 8px;
+  right: 8px;
+  width: 8px;
+  height: 8px;
+  background-color: $purple;
+  border: 2px solid white;
+  border-radius: 50%;
+}
+
+/* ---------- dropdown ---------- */
+
+.dropdown {
+  position: absolute;
+  top: calc(100% + 8px);
+  left: 0;
+  right: 0;
+  z-index: 200;
+
+  max-height: min(70vh, 460px);
+  padding: 6px;
+  overflow-y: auto;
+
+  background-color: white;
+  border: 1px solid #e5e5e5;
+  border-radius: 12px;
+  box-shadow: 0 12px 32px rgba(0, 0, 0, 0.12);
+
+  animation: drop-in 0.14s ease-out;
+}
+
+@keyframes drop-in {
+  from {
+    opacity: 0;
+    transform: translateY(-4px);
+  }
+}
+
+.dropdown-header {
+  padding: 8px 10px 6px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: #999;
+}
+
+.result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  width: 100%;
+  padding: 10px;
+
+  text-align: left;
+  background: transparent;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+
+  &.active {
+    background-color: #f3edfc;
+  }
+}
+
+.priority-dot {
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+
+  &.high {
+    background-color: #9b2fc7;
+  }
+
+  &.medium {
+    background-color: #e0a020;
+  }
+
+  &.low {
+    background-color: #3aa76d;
+  }
+}
+
+.result-body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  gap: 2px;
+  min-width: 0;
+}
+
+.result-title,
+.result-desc {
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+}
+
+.result-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.result-desc {
+  font-size: 12px;
+  color: #888;
+}
+
+mark {
+  color: inherit;
+  background-color: rgba(100, 13, 214, 0.16);
+  border-radius: 3px;
+}
+
+.status-badge {
+  flex-shrink: 0;
+  padding: 3px 8px;
+
+  font-size: 11px;
+  font-weight: 600;
+  white-space: nowrap;
+  color: #555;
+  background-color: #eee;
+  border-radius: 6px;
+
+  &[data-status='todo'] {
+    color: #1d5fb8;
+    background-color: #e4effc;
+  }
+
+  &[data-status='in-progress'] {
+    color: #a35f00;
+    background-color: #fdf0dc;
+  }
+
+  &[data-status='done'] {
+    color: #237a4b;
+    background-color: #e1f4e9;
+  }
+}
+
+.dropdown-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+
+  margin-top: 4px;
+  padding: 8px 10px 4px;
+
+  font-size: 12px;
+  color: #999;
+  border-top: 1px solid #f0f0f0;
+
+  .hints {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    margin-left: auto;
+  }
+
+  kbd {
+    padding: 0 5px;
+    font-size: 10px;
+  }
+}
+
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+
+  padding: 28px 16px;
+
+  font-size: 14px;
+  text-align: center;
+  color: #888;
+
+  span {
+    font-size: 32px;
+    color: #bbb;
+  }
+
+  strong {
+    color: #555;
+    word-break: break-word;
+  }
+}
+
+/* ---------- responsivo ---------- */
+
+@media (max-width: 1024px) {
+  :host {
+    margin-left: 16px;
+  }
+
+  .shortcut {
+    display: none;
+  }
+
+  input {
+    padding-right: 40px;
+  }
+}
+
+@media (max-width: $mobile) {
+  :host {
+    flex: 0 0 auto;
+    justify-content: flex-end;
+    margin-left: 0;
+  }
+
+  .search {
+    position: static;
+    width: auto;
+  }
+
+  .search-toggle {
+    position: relative;
+    display: flex;
+  }
+
+  .search-field {
+    display: none;
+  }
+
+  // campo aberto ocupa o header inteiro
+  .search.expanded {
+    .search-toggle {
+      display: none;
+    }
+
+    .search-field {
+      position: absolute;
+      inset: 0;
+      z-index: 150;
+
+      display: flex;
+      gap: 6px;
+      padding: 0 12px;
+
+      background-color: white;
+    }
+
+    .back {
+      display: flex;
+    }
+
+    .search-icon {
+      display: none;
+    }
+
+    input {
+      padding-left: 14px;
+    }
+  }
+
+  .dropdown {
+    position: absolute;
+    top: 100%;
+    left: 8px;
+    right: 8px;
+    max-height: calc(100vh - 100px);
+  }
+
+  .hints {
+    display: none !important;
+  }
+
+  .status-badge {
+    display: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .dropdown {
+    animation: none;
+  }
+}

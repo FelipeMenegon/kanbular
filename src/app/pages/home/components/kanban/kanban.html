@@ -9,6 +9,18 @@
 
 <div class="header">
   <h1>Área Central</h1>
+
+  @if (taskService.isSearching()) {
+    <div class="search-banner" role="status">
+      <span class="material-symbols-outlined">filter_list</span>
+      <span class="search-banner-text">
+        {{ taskService.filteredTasks().length }}
+        {{ taskService.filteredTasks().length === 1 ? 'resultado' : 'resultados' }} para
+        <strong>"{{ taskService.searchQuery().trim() }}"</strong>
+      </span>
+      <button type="button" (click)="taskService.clearSearch()">Limpar</button>
+    </div>
+  }
 </div>
 
 <div class="cards" cdkDropListGroup>
@@ -47,6 +59,10 @@
         (cdkDragEnded)="onTaskDragEnded()"
         (click)="openTask(task)">
       </app-task>
+    } @empty {
+      @if (taskService.isSearching()) {
+        <p class="column-empty">Nenhuma tarefa corresponde à busca</p>
+      }
     }
   </div>
 
@@ -84,6 +100,10 @@
         (cdkDragEnded)="onTaskDragEnded()"
         (click)="openTask(task)">
       </app-task>
+    } @empty {
+      @if (taskService.isSearching()) {
+        <p class="column-empty">Nenhuma tarefa corresponde à busca</p>
+      }
     }
   </div>
 
@@ -121,6 +141,10 @@
         (cdkDragEnded)="onTaskDragEnded()"
         (click)="openTask(task)">
       </app-task>
+    } @empty {
+      @if (taskService.isSearching()) {
+        <p class="column-empty">Nenhuma tarefa corresponde à busca</p>
+      }
     }
   </div>
 
@@ -158,6 +182,10 @@
         (cdkDragEnded)="onTaskDragEnded()"
         (click)="openTask(task)">
       </app-task>
+    } @empty {
+      @if (taskService.isSearching()) {
+        <p class="column-empty">Nenhuma tarefa corresponde à busca</p>
+      }
     }
   </div>
 

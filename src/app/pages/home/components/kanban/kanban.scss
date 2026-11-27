@@ -1,6 +1,60 @@
 .header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 20px;
+
   margin: 20px;
   padding-inline: 2px;
+}
+
+.search-banner {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+
+  padding: 6px 6px 6px 12px;
+
+  font-size: 13px;
+  color: #4a148c;
+  background-color: #f3edfc;
+  border: 1px solid #e2d4f8;
+  border-radius: 999px;
+
+  .material-symbols-outlined {
+    font-size: 18px;
+  }
+
+  .search-banner-text {
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  button {
+    flex-shrink: 0;
+    padding: 4px 10px;
+
+    font-size: 12px;
+    font-weight: 600;
+    color: rgb(100, 13, 214);
+    background-color: white;
+    border: 1px solid #e2d4f8;
+    border-radius: 999px;
+    cursor: pointer;
+
+    &:hover {
+      background-color: #ede3fb;
+    }
+  }
+}
+
+.column-empty {
+  padding: 16px 4px;
+  font-size: 13px;
+  text-align: center;
+  color: #888;
 }
 
 .cards {

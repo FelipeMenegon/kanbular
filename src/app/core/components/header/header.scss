@@ -1,19 +1,26 @@
 .header {
+  position: relative; // referência pro search expandido no mobile
+
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  gap: 24px;
 
   height: 80px;
-  padding: 30px;
+  padding: 0 30px;
 
   background-color: white;
   box-sizing: border-box;
   border-bottom: 1px solid #e0dede;
 }
 
+.logo {
+  flex-shrink: 0;
+}
+
 .logo img {
+  display: block;
   width: 200px;
-  height: 200px;
+  height: auto;
   object-fit: contain;
   margin-left: -18px;
 }
@@ -22,38 +29,10 @@ h3 {
   margin: 0;
 }
 
-.search {
-  position: relative;
-
-  display: flex;
-  flex: 1;
-  align-items: center;
-
-  margin-inline: 110px;
-}
-
-.search input {
-  width: 20vw;
-  height: 40px;
-  padding: 10px 10px 10px 40px;
-
-  background-color: rgb(231, 231, 231);
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  outline: none;
-}
-
-.search span {
-  position: absolute;
-  left: 12px;
-
-  color: #888;
-}
-
 .avatar {
   width: 40px;
   height: 40px;
-  margin: 20px;
+  flex-shrink: 0;
 
   background-color: rgb(78, 77, 77);
   border-radius: 50px;
@@ -85,5 +64,51 @@ h3 {
 
   &:hover {
     background-color: rgb(86, 10, 186);
+  }
+}
+
+@media (max-width: 1024px) {
+  .header {
+    gap: 16px;
+    padding: 0 20px;
+  }
+
+  .logo img {
+    width: 160px;
+    margin-left: -12px;
+  }
+}
+
+@media (max-width: 768px) {
+  .header {
+    gap: 8px;
+    height: 64px;
+    padding: 0 12px;
+  }
+
+  .logo {
+    margin-right: auto;
+  }
+
+  .logo img {
+    width: 130px;
+    margin-left: -8px;
+  }
+
+  .avatar {
+    width: 34px;
+    height: 34px;
+  }
+
+  // só o ícone de "+" no mobile
+  .new-task-button {
+    width: 40px;
+    height: 40px;
+    padding: 0;
+    justify-content: center;
+
+    span {
+      display: none;
+    }
   }
 }

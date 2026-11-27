@@ -1,8 +1,9 @@
-import { Injectable, inject, signal } from '@angular/core';
+import { Injectable, computed, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, forkJoin } from 'rxjs';
 import { Task } from '../models/task';
 import { ToastService } from './toast.service';
+import { matchesTask } from '../utils/search';
 
 @Injectable({
   providedIn: 'root',
@@ -13,6 +14,20 @@ export class TaskService {
   private apiUrl = 'http://localhost:5057/api/tasks';
 
   tasks = signal<Task[]>([]);
+
+  // termo digitado no search do header; filtra o quadro inteiro
+  searchQuery = signal('');
+
+  isSearching = computed(() => this.searchQuery().trim().length > 0);
+
+  filteredTasks = computed(() => {
+    const query = this.searchQuery();
+    return this.tasks().filter((task) => matchesTask(task, query));
+  });
+
+  clearSearch() {
+    this.searchQuery.set('');
+  }
 
   openedModal = signal(false);
 

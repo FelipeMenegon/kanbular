@@ -3,14 +3,16 @@
     <img src="assets/logos/logo.png" alt="Logo" />
   </div>
 
-  <div class="search">
-    <span class="material-symbols-outlined">search</span>
-    <input type="text" placeholder="Procurar Tarefas..." />
-  </div>
+  <app-search></app-search>
 
   <div class="avatar"></div>
 
-  <button (click)="taskService.openModal()" class="new-task-button">
+  <button
+    type="button"
+    class="new-task-button"
+    aria-label="Nova Tarefa"
+    (click)="taskService.openModal()"
+  >
     <i class="material-icons">add</i>
     <span>Nova Tarefa</span>
   </button>
