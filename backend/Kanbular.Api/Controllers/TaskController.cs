@@ -60,6 +60,56 @@ public class TasksController : ControllerBase
         return task;
     }
 
+    // PUT /api/tasks/reorder
+    // salva a ordem completa de uma coluna (usado pelo drag and drop, que pode
+    // reordenar a coluna inteira quando ela estava ordenada por data)
+    [HttpPut("reorder")]
+    public async Task<IActionResult> Reorder(ReorderColumnRequest request)
+    {
+        var tasks = await _db.Tasks
+            .Where(t => request.TaskIds.Contains(t.Id) || t.Status == request.Status)
+            .ToListAsync();
+
+        var byId = tasks.ToDictionary(t => t.Id);
+        if (request.TaskIds.Any(id => !byId.ContainsKey(id))) return NotFound();
+
+        // colunas de onde alguma task saiu precisam ter as posições refeitas
+        var oldStatuses = request.TaskIds
+            .Select(id => byId[id].Status)
+            .Where(s => s != request.Status)
+            .Distinct()
+            .ToList();
+
+        for (var i = 0; i < request.TaskIds.Count; i++)
+        {
+            var task = byId[request.TaskIds[i]];
+            task.Status = request.Status;
+            task.Position = i;
+        }
+
+        // tasks da coluna que não vieram na lista (não deveria acontecer) vão pro fim
+        var position = request.TaskIds.Count;
+        foreach (var task in tasks
+                     .Where(t => t.Status == request.Status && !request.TaskIds.Contains(t.Id))
+                     .OrderBy(t => t.Position))
+            task.Position = position++;
+
+        foreach (var oldStatus in oldStatuses)
+        {
+            var oldColumn = await _db.Tasks
+                .Where(t => t.Status == oldStatus && !request.TaskIds.Contains(t.Id))
+                .OrderBy(t => t.Position)
+                .ToListAsync();
+
+            for (var i = 0; i < oldColumn.Count; i++)
+                oldColumn[i].Position = i;
+        }
+
+        await _db.SaveChangesAsync();
+
+        return NoContent();
+    }
+
     // PUT /api/tasks/5/move
     [HttpPut("{id}/move")]
     public async Task<IActionResult> Move(int id, MoveTaskRequest request)

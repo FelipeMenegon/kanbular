@@ -65,8 +65,30 @@ export class TaskService {
     this.editingTask.set(null);
   }
 
-  updateTaskPosition(taskId: number, newStatus: Task['status'], newPosition: number) {
-    this.moveLocally(taskId, newStatus, newPosition)
+  // salva a ordem completa de uma coluna depois de um drag (taskIds já na ordem final,
+  // incluindo a task movida). Atualiza a tela na hora; se der erro, recarrega do banco.
+  reorderColumn(movedTaskId: number, status: Task['status'], taskIds: number[]) {
+    this.tasks.update((tasks) => {
+      const oldStatus = tasks.find((t) => t.id === movedTaskId)?.status;
+
+      const updated = tasks.map((task) => {
+        const index = taskIds.indexOf(task.id);
+        return index === -1 ? { ...task } : { ...task, status, position: index };
+      });
+
+      // fecha o buraco na coluna de onde a task saiu
+      if (oldStatus && oldStatus !== status) {
+        this.updatePositions(
+          updated.filter((t) => t.status === oldStatus).sort((a, b) => a.position - b.position),
+        );
+      }
+
+      return updated;
+    });
+
+    // PUT /api/tasks/reorder
+    this.http
+      .put(`${this.apiUrl}/reorder`, { status, taskIds })
       .subscribe({ error: () => this.loadTasks() });
   }
 

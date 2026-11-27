@@ -55,8 +55,9 @@
         [task]="task"
         cdkDrag
         [cdkDragData]="task"
-        (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onTaskDragEnded()"
+        (pointerdown)="onTaskPointerDown()"
+        (cdkDragStarted)="onTaskDragStarted()"
+        (cdkDragEnded)="onDragEnded()"
         (click)="openTask(task)">
       </app-task>
     } @empty {
@@ -96,8 +97,9 @@
         [task]="task"
         cdkDrag
         [cdkDragData]="task"
-        (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onTaskDragEnded()"
+        (pointerdown)="onTaskPointerDown()"
+        (cdkDragStarted)="onTaskDragStarted()"
+        (cdkDragEnded)="onDragEnded()"
         (click)="openTask(task)">
       </app-task>
     } @empty {
@@ -137,8 +139,9 @@
         [task]="task"
         cdkDrag
         [cdkDragData]="task"
-        (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onTaskDragEnded()"
+        (pointerdown)="onTaskPointerDown()"
+        (cdkDragStarted)="onTaskDragStarted()"
+        (cdkDragEnded)="onDragEnded()"
         (click)="openTask(task)">
       </app-task>
     } @empty {
@@ -178,8 +181,9 @@
         [task]="task"
         cdkDrag
         [cdkDragData]="task"
-        (cdkDragStarted)="onDragStarted()"
-        (cdkDragEnded)="onTaskDragEnded()"
+        (pointerdown)="onTaskPointerDown()"
+        (cdkDragStarted)="onTaskDragStarted()"
+        (cdkDragEnded)="onDragEnded()"
         (click)="openTask(task)">
       </app-task>
     } @empty {

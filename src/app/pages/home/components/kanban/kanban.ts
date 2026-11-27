@@ -49,36 +49,40 @@ export class Kanban {
   }
 
   drop(event: CdkDragDrop<Task[]>, newStatus: Task['status']) {
-    const task = event.item.data;
+    const task: Task = event.item.data;
+
+    // o índice do drop é relativo ao que está na tela (ordenado por data e/ou filtrado
+    // pela busca), não às posições salvas. Por isso a ordem que o usuário está vendo
+    // vira a nova ordem manual da coluna, com a task inserida onde foi solta.
+    // (precisa ser calculado ANTES de trocar a coluna pra 'manual')
+    const visible = this.sortedTasks(newStatus).filter((t) => t.id !== task.id);
+    const column = this.sortTasks(
+      this.taskService.tasks().filter((t) => t.status === newStatus && t.id !== task.id),
+      this.sortOrders()[newStatus],
+    );
+
+    column.splice(this.realDropIndex(visible, column, event.currentIndex), 0, task);
 
     this.sortOrders.update(current => ({
       ...current,
       [newStatus]: 'manual'
     }));
 
-    this.taskService.updateTaskPosition(
+    this.taskService.reorderColumn(
       task.id,
       newStatus,
-      this.realDropIndex(task, newStatus, event.currentIndex)
+      column.map((t) => t.id),
     );
   }
 
   // com a busca ativa a coluna mostra só parte das tasks, então o índice do drop
-  // precisa ser traduzido pra posição real na coluna completa
-  private realDropIndex(task: Task, status: Task['status'], visibleIndex: number) {
-    if (!this.taskService.isSearching()) return visibleIndex;
-
-    const visible = this.sortedTasks(status).filter((t) => t.id !== task.id);
-    const all = this.sortTasks(
-      this.taskService.tasks().filter((t) => t.status === status && t.id !== task.id),
-      'manual',
-    );
-
+  // precisa ser traduzido pro índice na coluna completa (na mesma ordenação)
+  private realDropIndex(visible: Task[], column: Task[], visibleIndex: number) {
     const target = visible[visibleIndex];
-    if (target) return all.findIndex((t) => t.id === target.id);
+    if (target) return column.findIndex((t) => t.id === target.id);
 
     const last = visible.at(-1);
-    return last ? all.findIndex((t) => t.id === last.id) + 1 : all.length;
+    return last ? column.findIndex((t) => t.id === last.id) + 1 : column.length;
   }
 
   toggleSortMenu(column: string) {
@@ -108,17 +112,22 @@ export class Kanban {
     document.body.classList.remove('is-dragging');
   }
 
-  // o click dispara logo depois de soltar a task; isso evita abrir o modal ao arrastar
-  private justDragged = false;
+  // o click dispara depois de soltar a task (no touch, às vezes numa task separada,
+  // depois de um setTimeout). Por isso a flag só é zerada no próximo toque/clique,
+  // e não por tempo: qualquer click que vier depois de um drag é ignorado.
+  private dragged = false;
 
-  onTaskDragEnded() {
-    this.onDragEnded();
-    this.justDragged = true;
-    setTimeout(() => (this.justDragged = false));
+  onTaskPointerDown() {
+    this.dragged = false;
+  }
+
+  onTaskDragStarted() {
+    this.dragged = true;
+    this.onDragStarted();
   }
 
   openTask(task: Task) {
-    if (this.justDragged) return;
+    if (this.dragged) return;
     this.taskService.openEditModal(task);
   }
 }
