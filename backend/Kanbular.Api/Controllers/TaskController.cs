@@ -48,28 +48,23 @@ public class TasksController : ControllerBase
     [HttpPut("{id}/move")]
     public async Task<IActionResult> Move(int id, MoveTaskRequest request)
     {
-        // 1. Busca a tarefa no banco
         var task = await _db.Tasks.FindAsync(id);
         if (task is null) return NotFound();
 
         var oldStatus = task.Status;
 
-        // 2. Pega as outras tarefas da coluna de destino, em ordem
         var column = await _db.Tasks
             .Where(t => t.Status == request.Status && t.Id != id)
             .OrderBy(t => t.Position)
             .ToListAsync();
 
-        // 3. Coloca a tarefa na nova posição
         var position = Math.Clamp(request.Position, 0, column.Count);
         task.Status = request.Status;
         column.Insert(position, task);
 
-        // 4. Renumera a coluna de destino: 0, 1, 2...
         for (var i = 0; i < column.Count; i++)
             column[i].Position = i;
 
-        // 5. Se mudou de coluna, renumera a coluna antiga para não ficar "buraco"
         if (oldStatus != request.Status)
         {
             var oldColumn = await _db.Tasks
@@ -81,7 +76,6 @@ public class TasksController : ControllerBase
                 oldColumn[i].Position = i;
         }
 
-        // 6. Salva tudo no banco de uma vez
         await _db.SaveChangesAsync();
 
         return NoContent();

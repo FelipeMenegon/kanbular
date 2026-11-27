@@ -38,7 +38,6 @@ export class TaskService {
   }
 
   updateTaskPosition(taskId: number, newStatus: Task['status'], newPosition: number) {
-    // Atualiza a tela na hora (a mesma lógica de antes)...
     this.tasks.update((tasks) => {
       const updatedTasks = tasks.map((task) => ({ ...task }));
 
@@ -63,7 +62,6 @@ export class TaskService {
       return [...otherTasks, ...tasksInColumn];
     });
 
-    // ...e avisa o servidor. Se der erro, recarrega do banco para desfazer.
     this.http
       .put(`${this.apiUrl}/${taskId}/move`, { status: newStatus, position: newPosition })
       .subscribe({ error: () => this.loadTasks() });
